@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "Renfe Auto-Clicker",
+  "version": "1.0",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "*://*.renfe.com/*"
+  ],
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.renfe.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
