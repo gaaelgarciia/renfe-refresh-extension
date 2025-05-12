@@ -13,22 +13,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   startBtn.addEventListener("click", () => {
-    const trainNumber = trainInput.value.trim();
+    const trainTime = trainInput.value.trim();
 
-    if (!/^\d+$/.test(trainNumber)) {
-      statusText.textContent = "Error: Must be a number";
+    const timeRegex = /^([01]\d|2[0-3]).([0-5]\d)$/; // Validates hour format
+    if (!timeRegex.test(trainTime)) {
+      statusText.textContent = "Error: Must be a valid time (HH:mm, 00.00-23.59)";
       return;
     }
 
-    browser.storage.local.set({ trainNumber: trainNumber });
+    browser.storage.local.set({ trainTime: trainTime });
 
     browser.runtime
       .sendMessage({
         action: "startMonitoring",
-        trainNumber: trainNumber,
+        trainTime: trainTime,
       })
       .then(() => {
-        statusText.textContent = `Monitoring train ${trainNumber}...`;
+        statusText.textContent = `Monitoring train at ${trainTime}...`;
       })
       .catch((error) => {
         statusText.textContent = `Error: ${error.message}`;

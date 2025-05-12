@@ -2,40 +2,47 @@
 let trainFound = false;
 let lastRefreshTime = 0;
 
+
 // Listen for messages from background
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "checkForTrain" && !trainFound) {
     try {
-      const trainButton = document.querySelector(
-        `button[tren="${request.trainNumber}"]`,
-      );
+      const trainRows = Array.from(document.querySelectorAll("td[data-label='Salida']"));
+      console.log ("Train rows found: ", trainRows);
 
-      if (trainButton) {
-        trainFound = true;
-        console.log("Train found! Clicking button...");
-        trainButton.click();
-        browser.runtime
-          .sendMessage({
-            action: "trainFound",
-            trainNumber: request.trainNumber,
-          })
-          .catch((error) =>
-            console.error("Error reporting train found:", error),
-          );
+      const trainRow = trainRows.find((cell) => {
+        const departureTime = cell.textContent.trim().replace(/\s+/g, '');
+        const userTime = request.trainTime.trim().replace(/\s+/g, ''); 
+        console.log("Checking departure time: ", departureTime, "against user time: ", userTime);
+        return departureTime === userTime; 
+      });
+      
+      if (trainRow) {
+        // Encontrar la fila completa y luego buscar el botón
+        const trainButton = trainRow.closest("tr").querySelector("button.btn.btn-sm.btn-purple.no-width.margin-right-extra");
+        if (trainButton) {
+          trainFound = true;
+          console.log("Train found! Clicking button...");
+          trainButton.click();
+          browser.runtime
+            .sendMessage({
+              action: "trainFound",
+              trainTime: request.trainTime,
+            })
+            .catch((error) =>
+              console.error("Error reporting train found:", error),
+            );
+        } else {
+          console.error("Button not found in the row!");
+        }
       } else {
         const currentTime = Date.now();
-        // Don't refresh too frequently
         if (currentTime - lastRefreshTime > 2000) {
           lastRefreshTime = currentTime;
           console.log("Train not found, refreshing page...");
-
-          // Notify background that we're about to refresh
           browser.runtime
-            .sendMessage({
-              action: "pageRefreshed",
-            })
+            .sendMessage({ action: "pageRefreshed" })
             .catch((error) => console.error("Error reporting refresh:", error));
-
           window.location.reload();
         }
       }

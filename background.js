@@ -6,14 +6,15 @@ let monitoringTabId = null;
 
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "startMonitoring") {
-    currentTrain = request.trainNumber;
+    const trainTime = request.trainTime;
+    currentTrain = trainTime;
     lastRefreshTime = Date.now();
 
     browser.tabs
       .query({ active: true, currentWindow: true })
       .then((tabs) => {
         monitoringTabId = tabs[0].id;
-        startMonitoring(monitoringTabId);
+        startMonitoring(monitoringTabId, trainTime);
         startWatchdog();
       })
       .catch((error) => {
@@ -59,7 +60,7 @@ function checkForTrain(tabId) {
   browser.tabs
     .sendMessage(tabId, {
       action: "checkForTrain",
-      trainNumber: currentTrain,
+      trainTime: currentTrain,
     })
     .catch((error) => {
       console.error("Error communicating with tab:", error);
