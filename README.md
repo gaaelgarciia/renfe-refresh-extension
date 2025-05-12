@@ -25,5 +25,6 @@ about:debugging#/runtime/this-firefox
 
 3. Luego haz click en "Load Temporary Add-on" y selecciona el archivo manifest.json
 
-4. Para buscar el tren que se quiera usar entra en modo de inspeccion con F12 y luego pulsa ctrl+shift+c para entrar en modo de selección. Una vez hecho esto haz click en el tren a buscar y ahí podrás ver que aparece en la ventana de inspeccion un id de la forma 09123, ese es el id a usar. **ESTA FORMA DE OBTENER LOS IDS ES MUY POCO PRACTICA, ESTOY TRABAJANDO EN UNA MEJOR IMPLEMENTACIÓN**
+4. Dirígete a la pagina de renfe y desde el abono selecciona el dia y el destino **CON LA EXTENSIÓN DESABILITADA**
 
+5. Una vez en la pagina de formalización, habilita la extensión, clicka en ella y escribe la hora de salida en el formato HH.MM
