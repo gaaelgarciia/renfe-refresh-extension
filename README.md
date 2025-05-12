@@ -7,6 +7,8 @@ Ha sido creado sobre todo para las personas que necesitamos sacar un billete de 
 > [!WARNING]  
 > Esta extensión  está en un estado muy experimental, cualquier posible mejora o implementación será agradecida
 
+Debido a un problema del programa que no he conseguido solucionar aún para poder seleccionar el destino y el dia la extensión debe estar desabilidada **SOLO ACTIVARLO EN LA PAGINA DE FORMALIZACIÓN, UNA VEZ YA SELECCIONADO EL DESTINO Y EL DIA**
+
 ## Como usarla
 
 1. Primero clona el respositorio con:
