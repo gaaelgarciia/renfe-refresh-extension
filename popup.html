@@ -15,6 +15,11 @@
       --radius: 0.5rem;
       --shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       width: 320px;
@@ -33,7 +38,8 @@
       background: var(--color-card);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 1.5rem;
+      padding: 1rem;
+      width: 100%;
     }
     label {
       display: block;
@@ -41,32 +47,33 @@
       margin-bottom: 0.25rem;
       color: var(--color-muted);
     }
-    input {
+    input[type="time"] {
       width: 100%;
-      padding: 0.75rem;
+      padding: 0.5rem 0.75rem;
       margin-bottom: 1rem;
       border: 1px solid #ddd;
       border-radius: var(--radius);
       font-size: 1rem;
-      transition: border-color 0.2s;
+      line-height: 1.2;
     }
-    input:focus {
-      border-color: var(--color-primary);
-      outline: none;
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      right: 0.75rem;
+      padding: 0;
     }
     .buttons {
       display: flex;
-      justify-content: space-between;
+      /* justify-content: space-between; */
       gap: 0.5rem;
     }
     button {
       flex: 1;
-      padding: 0.75rem;
+      min-height: 2.5rem;
+      padding: 0 0.75rem;
       border: none;
       border-radius: var(--radius);
       font-size: 1rem;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: transform 0.1s;
     }
     button#startMonitor {
       background: var(--color-primary);
@@ -83,8 +90,9 @@
       transform: translateY(0);
     }
     #status {
-      margin-top: 1.5rem;
-      padding: 1rem;
+      width: 100%;
+      margin-top: 1rem;
+      padding: 0.75rem;
       background: #fff;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -100,7 +108,12 @@
   <h3>Renfe Auto-Clicker</h3>
   <div>
     <label for="trainTime">Hora de salida:</label>
-    <input type="text" id="trainNumber" placeholder="21.50">
+    <input
+      type="time"
+      id="trainTime"
+      step="60"
+      value="21:50"
+    >
     <div class="buttons">
       <button id="startMonitor">Iniciar</button>
       <button id="stopMonitor">Detener</button>
