@@ -1,28 +1,50 @@
 document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.getElementById("startMonitor");
   const stopBtn = document.getElementById("stopMonitor");
-  const trainInput = document.getElementById("trainNumber");
+  const trainSelect = document.getElementById("trainSelect");
   const statusText = document.getElementById("statusText");
+
+  // Get hours of departure from content.js
+  function fetchTrainTimes() {
+    browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+      browser.tabs.sendMessage(
+        tabs[0].id,
+        { action: "getTrainTimes" },
+        (response) => {
+          if (
+            response &&
+            response.trainTimes &&
+            response.trainTimes.length > 0
+          ) {
+            trainSelect.innerHTML = response.trainTimes
+              .map((time) => `<option value="${time}">${time}</option>`)
+              .join("");
+          } else {
+            trainSelect.innerHTML =
+              '<option value="">No se encontraron trenes</option>';
+          }
+        },
+      );
+    });
+  }
+
+  fetchTrainTimes();
 
   // Load saved train number and check if monitoring is active
   browser.storage.local.get(["trainNumber", "isMonitoring"]).then((result) => {
-    if (result.trainNumber) trainInput.value = result.trainNumber;
+    if (result.trainNumber) trainSelect.value = result.trainNumber;
     if (result.isMonitoring) {
       statusText.textContent = `Monitoring train ${result.trainNumber}...`;
     }
   });
 
   startBtn.addEventListener("click", () => {
-    const trainTime = trainInput.value.trim();
-
-    const timeRegex = /^([01]\d|2[0-3]).([0-5]\d)$/; // Validates hour format
-    if (!timeRegex.test(trainTime)) {
-      statusText.textContent = "Error: Must be a valid time (HH:mm, 00.00-23.59)";
+    const trainTime = trainSelect.value;
+    if (!trainTime) {
+      statusText.textContent = "Selecciona una hora de tren válida";
       return;
     }
-
     browser.storage.local.set({ trainTime: trainTime });
-
     browser.runtime
       .sendMessage({
         action: "startMonitoring",

@@ -2,24 +2,34 @@
 let trainFound = false;
 let lastRefreshTime = 0;
 
-
 // Listen for messages from background
 browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "checkForTrain" && !trainFound) {
     try {
-      const trainRows = Array.from(document.querySelectorAll("td[data-label='Salida']"));
-      console.log ("Train rows found: ", trainRows);
+      const trainRows = Array.from(
+        document.querySelectorAll("td[data-label='Salida']"),
+      );
+      console.log("Train rows found: ", trainRows);
 
       const trainRow = trainRows.find((cell) => {
-        const departureTime = cell.textContent.trim().replace(/\s+/g, '');
-        const userTime = request.trainTime.trim().replace(/\s+/g, ''); 
-        console.log("Checking departure time: ", departureTime, "against user time: ", userTime);
-        return departureTime === userTime; 
+        const departureTime = cell.textContent.trim().replace(/\s+/g, "");
+        const userTime = request.trainTime.trim().replace(/\s+/g, "");
+        console.log(
+          "Checking departure time: ",
+          departureTime,
+          "against user time: ",
+          userTime,
+        );
+        return departureTime === userTime;
       });
-      
+
       if (trainRow) {
         // Encontrar la fila completa y luego buscar el botón
-        const trainButton = trainRow.closest("tr").querySelector("button.btn.btn-sm.btn-purple.no-width.margin-right-extra");
+        const trainButton = trainRow
+          .closest("tr")
+          .querySelector(
+            "button.btn.btn-sm.btn-purple.no-width.margin-right-extra",
+          );
         if (trainButton) {
           trainFound = true;
           console.log("Train found! Clicking button...");
@@ -49,6 +59,23 @@ browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } catch (error) {
       console.error("Error in checkForTrain:", error);
     }
+  }
+
+  // New: respond with the list of train departure times
+  if (request.action === "getTrainTimes") {
+    try {
+      const trainRows = Array.from(
+        document.querySelectorAll("td[data-label='Salida']"),
+      );
+      const trainTimes = trainRows
+        .map((cell) => cell.textContent.trim())
+        .filter(Boolean);
+      sendResponse({ trainTimes });
+    } catch (error) {
+      sendResponse({ trainTimes: [], error: error.message });
+    }
+    // Indicate that the response is asynchronous
+    return true;
   }
 });
 

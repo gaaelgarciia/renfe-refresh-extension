@@ -41,16 +41,17 @@
       margin-bottom: 0.25rem;
       color: var(--color-muted);
     }
-    input {
+    select {
       width: 100%;
       padding: 0.75rem;
       margin-bottom: 1rem;
       border: 1px solid #ddd;
       border-radius: var(--radius);
       font-size: 1rem;
-      transition: border-color 0.2s;
+      background: #fff;
+      color: var(--color-text);
     }
-    input:focus {
+    select:focus {
       border-color: var(--color-primary);
       outline: none;
     }
@@ -99,8 +100,10 @@
 <body>
   <h3>Renfe Auto-Clicker</h3>
   <div>
-    <label for="trainTime">Hora de salida:</label>
-    <input type="text" id="trainNumber" placeholder="21.50">
+    <label for="trainSelect">Selecciona hora de salida:</label>
+    <select id="trainSelect">
+      <option value="">Cargando trenes...</option>
+    </select>
     <div class="buttons">
       <button id="startMonitor">Iniciar</button>
       <button id="stopMonitor">Detener</button>
