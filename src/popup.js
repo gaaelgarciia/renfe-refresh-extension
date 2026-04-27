@@ -4,6 +4,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const trainSelect = document.getElementById("trainSelect");
   const statusText = document.getElementById("statusText");
 
+  function renderTrainOptions(trainTimes) {
+    trainSelect.textContent = "";
+    const fragment = document.createDocumentFragment();
+
+    if (trainTimes.length === 0) {
+      const emptyOption = document.createElement("option");
+      emptyOption.value = "";
+      emptyOption.textContent = "No se encontraron trenes";
+      fragment.appendChild(emptyOption);
+    } else {
+      for (const time of trainTimes) {
+        const option = document.createElement("option");
+        const safeTime = String(time);
+        option.value = safeTime;
+        option.textContent = safeTime;
+        fragment.appendChild(option);
+      }
+    }
+
+    trainSelect.appendChild(fragment);
+  }
+
   // Get hours of departure from content.js
   function fetchTrainTimes() {
     browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
@@ -16,12 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
             response.trainTimes &&
             response.trainTimes.length > 0
           ) {
-            trainSelect.innerHTML = response.trainTimes
-              .map((time) => `<option value="${time}">${time}</option>`)
-              .join("");
+            renderTrainOptions(response.trainTimes);
           } else {
-            trainSelect.innerHTML =
-              '<option value="">No se encontraron trenes</option>';
+            renderTrainOptions([]);
           }
         },
       );

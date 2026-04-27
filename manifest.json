@@ -2,31 +2,44 @@
   "manifest_version": 2,
   "name": "Renfe Auto-Clicker",
   "version": "1.0",
+
   "permissions": [
     "activeTab",
     "tabs",
     "storage",
     "*://*.renfe.com/*"
   ],
+
   "browser_action": {
-    "default_popup": "popup.html",
-    "default_icon": "icon.png"
+    "default_popup": "src/popup.html",
+    "default_icon": "src/icon.png"
   },
+
   "background": {
     "scripts": [
-      "background.js"
+      "src/background.js"
     ],
     "persistent": false
   },
+
   "content_scripts": [
     {
       "matches": [
         "*://*.renfe.com/*"
       ],
       "js": [
-        "content.js"
+        "src/content.js"
       ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "renfe-autoclicker@example.com",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  }
 }
